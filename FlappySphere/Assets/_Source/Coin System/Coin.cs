@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public ObjectPool pool; // Ссылка на пул объектов
+    public CoinObjectPool pool; // Ссылка на пул объектов
+    [SerializeField] public float speed;
     public float returnDelay = 2f; // Время ожидания перед возвратом
 
-    private CoinPresenter presenter;
-
-    private void Start()
+    void Update()
     {
-        presenter = FindObjectOfType<CoinPresenter>(); // Находим презентер на сцене
+        transform.Translate(Vector2.left * speed * Time.deltaTime);
+        StartCoroutine(ReturnToPoolAfterDelay());
+    }
+
+    public void Activate(Vector3 position)
+    {
+        transform.position = position;
+        gameObject.SetActive(true);
+    }
+
+    private IEnumerator ReturnToPoolAfterDelay()
+    {
+        yield return new WaitForSeconds(returnDelay);
+
+        pool.ReturnObject(this);
     }
 }

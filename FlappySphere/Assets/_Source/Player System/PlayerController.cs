@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float flapForce;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private CoinPresenter coinPresenter;
 
     void Start()
     {
@@ -29,6 +30,11 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Coin"))
+        {
+            coinPresenter.CollectCoin();
         }
     }
 }

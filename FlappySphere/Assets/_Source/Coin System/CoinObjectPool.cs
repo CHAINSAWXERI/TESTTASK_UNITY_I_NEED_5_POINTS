@@ -1,41 +1,47 @@
 using System.Collections.Generic;
-
 using UnityEngine;
 
-/// ObjectPool.cs
 public class CoinObjectPool : MonoBehaviour
 {
-    public GameObject prefab; // Префаб для создания объектов
-    public int poolSize = 10; // Размер пула
+    [SerializeField] private GameObject prefab; // Префаб для создания объектов
+    [SerializeField] private int poolSize = 10; // Размер пула
+    private List<Coin> pool; // Список для хранения объектов
 
-    private Queue<GameObject> poolQueue;
-
-    private void Start()
+    void Start()
     {
-        poolQueue = new Queue<GameObject>();
-
+        pool = new List<Coin>();
         for (int i = 0; i < poolSize; i++)
         {
             GameObject obj = Instantiate(prefab);
+            Coin coin = obj.GetComponent<Coin>();
+            coin.pool = this; // Устанавливаем ссылку на пул
             obj.SetActive(false);
-            poolQueue.Enqueue(obj);
+            pool.Add(coin); // Добавляем объект в пул
         }
     }
 
     public GameObject GetObject()
     {
-        if (poolQueue.Count > 0)
+        foreach (Coin coin in pool)
         {
-            GameObject obj = poolQueue.Dequeue();
-            obj.SetActive(true);
-            return obj;
+            if (!coin.gameObject.activeInHierarchy)
+            {
+                coin.gameObject.SetActive(true); // Активируем объект
+                return coin.gameObject;
+            }
         }
-        return null; // Если нет доступных объектов в пуле
+
+        // Если нет доступных объектов, создаем новый
+        GameObject newObj = Instantiate(prefab);
+        Coin newCoin = newObj.GetComponent<Coin>();
+        newCoin.pool = this;
+        newObj.SetActive(false);
+        pool.Add(newCoin); // Добавляем новый объект в пул
+        return newObj;
     }
 
-    public void ReturnObject(GameObject obj)
+    public void ReturnObject(Coin coin)
     {
-        obj.SetActive(false);
-        poolQueue.Enqueue(obj);
+        coin.gameObject.SetActive(false); // Деактивируем объект
     }
 }
