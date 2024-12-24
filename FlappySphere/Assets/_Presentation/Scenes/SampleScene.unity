@@ -1374,7 +1374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flapForce: 5
   rb: {fileID: 1819426701}
-  coinPresenter: {fileID: 0}
+  coinPresenter: {fileID: 281426716}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

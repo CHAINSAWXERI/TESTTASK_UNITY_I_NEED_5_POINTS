@@ -34,7 +34,9 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Coin"))
         {
+            Debug.Log("12323");
             coinPresenter.CollectCoin();
+            collision.gameObject.GetComponent<Coin>().pool.ReturnObject(collision.gameObject.GetComponent<Coin>());
         }
     }
 }
